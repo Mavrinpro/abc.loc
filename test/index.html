@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+             min-height: 90vh;
+        }
+    </style>
+</head>
+<body>
+<button id="btn">Кнопка</button>
+<br>
+<br>
+<br>
+<br>
+<img src="/wp-content/uploads/2022/06/1-1.png" alt="" width="100" id="img" style="position: relative;">
+<p id="targetImg"></p>
+<script>
+    function randomInteger(min, max) {
+        var rand = min - 0.5 + Math.random() * (max - min + 1)
+        rand = Math.round(rand);
+        return rand;
+    }
+
+    function kickImg() {
+        var w = document.body.offsetWidth;
+        var h = document.body.offsetHeight;
+        console.log(h);
+        var dx = randomInteger(0, w - 100);
+        var dy = randomInteger(0, h - 100);
+        document.getElementById('img').style.position = 'relative';
+        document.getElementById('img').style.display = 'block';
+        document.getElementById('img').style.top = dy + 'px';
+        document.getElementById('img').style.left = dx + 'px';
+        //document.querySelector('#targetImg p').innerHTML = 'dx = ' + dx + ',<br> dy = ' + dy;
+        console.log("dx = " + dx + ", dy = " + dy);
+    }
+    document.getElementById('btn').addEventListener('click', kickImg);
+</script>
+</body>
+</html>
