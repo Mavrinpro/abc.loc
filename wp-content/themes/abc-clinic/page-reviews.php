@@ -1,4 +1,17 @@
 <?php get_header(); ?>
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+					<?php
+					if ( function_exists('yoast_breadcrumb') ) {
+						yoast_breadcrumb( '<p id="breadcrumbs" class="mb-3">','</p>' );
+					}
+					?>
+                </div>
+            </div>
+        </div>
+    </section>
 	<section class="bg_reviews">
 		<div class="container">
 			<div class="row">
@@ -29,12 +42,12 @@
 	                //$comments = $comments_query->query( 'status=approve&order=ASC&number='.$paged);
 	                $comments = $wpdb->get_results( "SELECT * FROM wp_comments WHERE comment_approved = 1 ORDER BY comment_ID DESC LIMIT $paged");
                     //dump($comments);
-	                $countComments = sizeof($comments_query->query( 'status=approve' ));
-	                $pages = get_comment_pages_count( $countComments );
-	                $countCo = $comments_query->query( 'status=approve' );
-                    $ro = count($countCo);
-                    $countpages = round($countComments / $paged);
-                    echo end($comments)->comment_ID.'trtr';
+	                $countComments  = sizeof($comments_query->query( 'status=approve' ));
+	                $pages          = get_comment_pages_count( $countComments );
+	                $countCo        = $comments_query->query( 'status=approve' );
+                    $ro             = count($countCo);
+                    $countpages     = round($countComments / $paged);
+                    //echo end($comments)->comment_ID.'trtr';
 	                if ( $comments ) {
 		                foreach ( $comments as $comment ) { ?>
                             <div class="block_comment mb-3" data-comment_id="<?php echo $comment->comment_ID; ?>"
@@ -72,16 +85,26 @@
                     <h3 class="h3 mt-0">Оставить отзыв</h3>
                     <div class="form-group">
                         <form action="" method="post">
-                            <input type="text" class="input_form mb-3" placeholder="Имя">
-                            <input type="text" class="input_form mb-3" placeholder="+7 (999) 99-99-99">
-                            <input type="number" class="input_form mb-3" placeholder="Номер мед. карты">
+                            <input type="hidden" value="reviews" name="form_position">
+                            <span style="color: #ef9f72;" class="before_error"></span>
+                            <input type="text" class="input_form mb-3" placeholder="Имя" name="name">
+                            <span style="color: #ef9f72;" class="before_error"></span>
+                            <input type="text" class="input_form mb-3 phone" placeholder="+7 (999) 99-99-99"
+                                   name="phone"
+                                   id="phone">
+                            <span style="color: #ef9f72;" class="before_error"></span>
+                            <input type="number" class="input_form mb-3" placeholder="Номер мед. карты" name="card">
+                            <input type="hidden" name="post_id" value="<?php echo get_the_ID() ?>">
+                            <span style="color: #ef9f72;" class="before_error"></span>
+                            <textarea name="comment" placeholder="Ваш отзыв" class="input_form"
+                                      rows="5"></textarea>
                             <span class="fsz-10 mt-2 color-white mb-2 d-block">
 <svg width="11" height="9" viewBox="0 0 11 9" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M3.69514 9L0 5.14839L1.32941 3.76265L3.69514 6.22854L9.67059 0L11 1.38574L3.69514 9Z" fill="white"/>
 </svg>
  Я согласен(на) с соглашением на обработку персональных данных</span>
                             <button type="submit" class="btn btn-orange d-inline-block pl-5 pr-5 pt-3 pb-3
-                            mt-3">Записаться
+                            mt-3" data-url="<?php echo admin_url('admin-ajax.php');?>" data-text_btn="Оставить отзыв">Оставить отзыв
                             </button>
                         </form>
                     </div>
@@ -106,6 +129,33 @@
             </div>
         </div>
     </section>
+<?php
+//$args = array(
+//	// Change the title of send button
+//	//'label_submit' => __( 'Отправить999', 'textdomain' ),
+//	'logged_in_as' => '',
+//	'submit_button'=> '',
+//	// Change the title of the reply section
+//	'title_reply' => '',
+//	// Remove "Text or HTML to be displayed after the set of comment fields".
+//	'comment_notes_after' => '',
+//    'comment_notes_before' => '',
+//    'fields ' => [
+//	    'author' => '<input type="text" class="input_form mb-3" placeholder="Имя">',
+//        'email' => '<input type="text" class="input_form mb-3" placeholder="+7 (999) 99-99-99">',
+//        'card' => '<input type="number" class="input_form mb-3" placeholder="Номер мед. карты">'
+//    ],
+//	// Redefine your own textarea (the comment body).
+//	'comment_field' => '<div class="input-group">
+//
+//                        <textarea name="comment" placeholder="Ваше сообщение" class="input_form mb-3" rows="5">
+//                        </textarea>
+//                          <button type="submit" class="btn btn-warning">Отправить</button>
+//                        </span>
+//                      </div>',
+//);
+//comment_form( $args );
+//?>
     <section class="mb-5">
         <div class="container">
             <div class="row align-items-center">

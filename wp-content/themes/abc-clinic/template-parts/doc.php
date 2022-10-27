@@ -1,14 +1,24 @@
 <?php get_header(); ?>
-    <section class="pb-5">
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+					<?php
+					if ( function_exists('yoast_breadcrumb') ) {
+						yoast_breadcrumb( '<p id="breadcrumbs" class="mb-3">','</p>' );
+					}
+					?>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="">
         <div class="container">
             <div class="row">
                 <div class="col-md-5 order-3 order-md-0">
                     <div class="row m-0 p-0 justify-content-center justify-content-md-start">
                         <h1 class="h2_single"><?php the_title(); ?></h1>
-                        <p>Ведущий врач
-                            Кандидат медицинских наук
-                            Главный врач-кардиолог</p>
-
+                        <p style="width: 100%;"><?php the_field( 'basic_spec' ); ?>
                         <div class="col-md-5 col-6">
                             <div class="block_icon">
                                 <svg width="61" height="61" viewBox="0 0 61 61" fill="none"
@@ -37,7 +47,7 @@
                         </div>
                         <button class="btn btn-orange d-block mt-5 pl-5 pr-5 pt-3 pb-3 modal__trigger">
                             Записаться
-                            <span style="left: 126.5px; top: 42.4688px;"></span></button>
+                            </button>
                     </div>
                 </div>
                 <div class="col-md-7 block_bg_doc order-1 order-md-0">
@@ -51,51 +61,62 @@
     <section class="accordion mb-3">
         <div class="container">
             <div class="row">
-                <div class="col-12">
-					<?php $img_doc = get_field( 'docs' ); ?>
+                <div class="col-12 p-0">
+					<?php $img_doc = get_field( 'docs' );  ?>
 					<?php $speczializacziya = get_field( 'speczializacziya', false, false ); ?>
-                    <div class="accord bg_basic">
-                        <div class="accord_head p-2 mb-2">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/spec_icon.png" alt="Карточка
-                            врача">
-                            <span class="m-0 ml-3">Специализация</span>
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/arrow2.png" alt="" class="ml-auto
-                                                mr-2 arrow_accordion">
-                        </div>
-                        <div class="content"><?php echo $speczializacziya ?></div>
-                    </div>
+<!--                    <div class="accord bg_basic">-->
+<!--                        <div class="accord_head p-2 mb-2">-->
+<!--                            <img src="--><?php //echo __PATH_IMG ?><!--/spec_icon.png" alt="Карточка-->
+<!--                            врача" class="ml-3">-->
+<!--                            <span class="m-0 ml-5">Специализация</span>-->
+<!--                            <img src="--><?php //echo __PATH_IMG ?><!--/arrow2.png" alt="" class="ml-auto-->
+<!--                                                mr-2 arrow_accordion">-->
+<!--                        </div>-->
+<!--                        <div class="content pb-2">-->
+<!--                            --><?php //if (get_field('speczializacziya')){
+//                                    echo the_field('speczializacziya');
+//                                }else{
+//                                    echo 'Информация не загружена.';
+//                                } ?>
+<!--                        </div>-->
+<!--                    </div>-->
                     <div class="accord bg_basic">
                         <div class="accord_head p-2 mb-2 bg_class">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/card_doc.png"
-                                 alt="Карточка врача">
-                            <span class="m-0 ml-3">О враче </span>
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/arrow2.png" alt="" class="ml-auto
+                            <img src="<?php echo __PATH_IMG ?>/card_doc.png"
+                                 alt="Карточка врача" class="ml-3">
+                            <span class="m-0 ml-5">Специализация </span>
+                            <img src="<?php echo __PATH_IMG ?>/arrow2.png" alt="" class="ml-auto
                                                 mr-2 arrow_accordion">
                         </div>
-                        <div class="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, atque
-                            debitis eius incidunt iure minima, nam nihil, odit pariatur placeat quasi reiciendis
-                            similique vel. Facere incidunt quasi saepe sint vero.</div>
+                        <div class="content">
+	                        <?php if (get_field('speczializacziya')){
+		                        echo the_field('speczializacziya');
+	                        }else{
+		                        echo '<p>Информация не загружена.</p>';
+	                        } ?>
+                        </div>
                     </div>
                     <div class="accord">
                         <div class="accord_head p-2 mb-2">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/sertificate.png"
-                                 alt="Карточка врача">
-                            <span class="m-0 ml-3">Сертификаты </span>
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/arrow2.png" alt="" class="ml-auto
+                            <img src="<?php echo __PATH_IMG ?>/sertificate.png"
+                                 alt="Карточка врача"  class="ml-3">
+                            <span class="m-0 ml-5">Сертификаты </span>
+                            <img src="<?php echo __PATH_IMG ?>/arrow2.png" alt="" class="ml-auto
                                                 mr-2 arrow_accordion">
                         </div>
 
                         <div class="swiper SwiperSertificate content" style="display: none">
                             <!-- Additional required wrapper -->
                             <div class="swiper-wrapper">
-								<?php if ( isset( $img_doc['url'] ) ) {
-									foreach ( $img_doc as $item ) { ?>
+								<?php if ($img_doc[1]) {
+									foreach ( $img_doc as $item ) {
+                                        if ($item != ""){ ?>
                                         <div class="swiper-slide">
-                                            <a href="<?php echo $item['url'] ?>" data-fancybox="gallery"> <img
-                                                        src="<?php echo $item['url'] ?>"
-                                                        alt="<?php echo $item['alt'] ?>"></a>
+                                            <a href="<?php echo $item ?>" data-fancybox="gallery"> <img
+                                                        src="<?php echo $item ?>"
+                                                        alt="<?php echo $item ?>"></a>
                                         </div>
-									<?php } ?>
+									<?php } } ?>
 								<?php } else {
 									echo 'Документы не загружены.';
 								} ?>
@@ -105,16 +126,19 @@
                         </div>
                         <div class="accord">
                             <div class="accord_head p-2 mb-2 bg_class">
-                                <img src="<?php echo get_template_directory_uri(); ?>/img/education.png"
-                                     alt="Карточка врача">
-                                <span class="m-0 ml-3">Образование </span>
-                                <img src="<?php echo get_template_directory_uri(); ?>/img/arrow2.png" alt="" class="ml-auto
+                                <img src="<?php echo __PATH_IMG; ?>/education.png"
+                                     alt="Карточка врача" class="ml-3">
+                                <span class="m-0 ml-5">Образование </span>
+                                <img src="<?php echo __PATH_IMG; ?>/arrow2.png" alt="" class="ml-auto
                                                 mr-2 arrow_accordion">
                             </div>
-                            <div class="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquam,
-                                asperiores culpa cumque cupiditate dolores eius, esse est fugiat iste magni natus
-                                officia
-                                placeat sequi ullam. Maxime optio sequi tempora?</div>
+                            <div class="content">
+                                <?php if (get_field('education')){
+                                    echo the_field('education');
+                                }else{
+                                    echo '<p>Информация не загружена.</p>';
+                                } ?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -124,7 +148,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12 load_text_ajax">
-                    <h2 class="slide_h2">Отзывы о враче</h2>
+
 	                <?php
 	                $comments_query = new WP_Comment_Query;
 	                //dump($comments_query);
@@ -143,7 +167,7 @@
                     //echo 'Страниц отзывов: '.$countpages.' Отзывов о враче: '.$countCommentsUser;
 
 	                if ( $comments ) {
-
+echo '<h2 class="slide_h2">Отзывы о враче</h2>';
 		                foreach ( $comments as $comment ) { ?>
                             <div class="block_comment mb-3" data-comment_id="<?php echo $comment->comment_ID; ?>"
                                  data-count_comment="<?php echo $countComments; ?>" data-post_id="<?php echo $post_id; ?>">
@@ -182,17 +206,26 @@
             <div class="col-md-6 block_comment_form bg_class p-md-5 p-3 mb-3 mb-md-0">
                 <h3 class="h3 mt-0">Оставить отзыв</h3>
                     <div class="form-group">
-                        <form action="" method="post">
-                            <input type="text" class="input_form mb-3" placeholder="Имя">
-                            <input type="text" class="input_form mb-3" placeholder="+7 (999) 99-99-99">
-                            <input type="number" class="input_form mb-3" placeholder="Номер мед. карты">
+                        <form action="" method="post" data-post_id="<?php echo get_the_ID() ?>">
+                            <input type="hidden" value="Отзыв о враче" name="form_position">
+                            <span style="color: #ef9f72;" class="before_error"></span>
+                            <input type="text" class="input_form mb-3" placeholder="Имя" name="name">
+                            <span style="color: #ef9f72;" class="before_error"></span>
+                            <input type="text" class="input_form mb-3 phone" placeholder="+7 (999) 99-99-99" name="phone"
+                                   id="phone">
+                            <span style="color: #ef9f72;" class="before_error"></span>
+                            <input type="number" class="input_form mb-3" placeholder="Номер мед. карты" name="card">
+                            <input type="hidden" name="post_id" value="<?php echo get_the_ID() ?>">
+                            <span style="color: #ef9f72;" class="before_error"></span>
+                            <textarea name="comment" placeholder="Ваш отзыв" class="input_form"
+                                      rows="5"></textarea>
                             <span class="fsz-10 mt-2 color-white mb-2 d-block">
 <svg width="11" height="9" viewBox="0 0 11 9" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M3.69514 9L0 5.14839L1.32941 3.76265L3.69514 6.22854L9.67059 0L11 1.38574L3.69514 9Z" fill="white"/>
 </svg>
  Я согласен(на) с соглашением на обработку персональных данных</span>
                             <button type="submit" class="btn btn-orange d-inline-block pl-5 pr-5 pt-3 pb-3
-                            mt-3">Записаться
+                            mt-3" data-url="<?php echo admin_url('admin-ajax.php');?>" data-text_btn="Оставить отзыв">Оставить отзыв
                             </button>
                         </form>
                     </div>

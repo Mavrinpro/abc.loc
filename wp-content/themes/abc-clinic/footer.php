@@ -16,8 +16,8 @@
             <div class="col-md-3">
                 <img src="<?php echo get_field('logo_footer', 59)['url']; ?>" alt="<?php echo get_field('logo_footer')
                 ['alt']; ?>" class="bounceInLeft wow">
-                <p class="licenсes">
-	                <?php echo get_field('txt_licences'); ?>
+                <p class="licenсes mt-3">
+	                <?php echo get_field('txt_licences', 59); ?>
                 </p>
             </div>
             <div class="col-md-2"></div>
@@ -64,31 +64,33 @@
         </div>
     </div>
 </section>
-<?php wp_footer(); ?>
 <!--Modal-->
 <div id="modal-1" class="slickModal">
     <div class="window">
         <!-- Your popup content -->
 
-            <div class="form_group"><h3 class="m-0">Записаться на прием</h3>
-                <p class="mb-2">Познакомьтесь с врачом и узнайте
-                    стоимость лечения</p>
-                <div class="form-group">
-                    <form action="" method="post">
-                        <input type="text" class="input_form" placeholder="Имя">
-                        <input type="text" class="input_form" placeholder="+7 (999) 99-99-99">
-                        <button type="submit" class="btn btn-orange d-inline-block pl-5 pr-5 pt-3 pb-3">Записаться
-                        </button>
-                    </form></div>
-
-
-                <span class="fsz-10 mt-2">Нажимая на кнопку вы соглашаетесь с Политикой
+        <div class="form_group"><h3 class="m-0">Записаться на прием</h3>
+            <p class="mb-2 text-white">Познакомьтесь с врачом и узнайте
+                стоимость лечения</p>
+            <form action="" method="post">
+                <input type="hidden" value="front_page" name="form_position">
+                <span style="color: #ef9f72;" class="before_error"></span>
+                <input type="text" class="input_form" placeholder="Имя" name="name">
+                <span style="color: #ef9f72;" class="before_error"></span>
+                <input type="text" class="input_form" placeholder="+7 (999) 99-99-99" id="modalPhone" name="phone">
+                <input type="hidden" name="post_id" value="<?php echo get_the_ID() ?>">
+                <button type="submit" class="btn btn-orange d-inline-block pl-5 pr-5 pt-3 pb-3" data-url="<?php echo
+                admin_url('admin-ajax.php');?>" data-text_btn="Записаться">Записаться
+                </button>
+            </form>
+            <span class="fsz-10 mt-2">Нажимая на кнопку вы соглашаетесь с Политикойs
                                 конфиденциальности</span>
-            </div>
+        </div>
 
     </div>
 </div>
 <!--Modal end-->
+<?php wp_footer(); ?>
 <script>
     var swiper = new Swiper(".mySwiper", {
         slidesPerView: 1,
@@ -107,6 +109,40 @@
             prevEl: ".prev",
         },
     });
+</script>
+<script>
+    var element2 = document.getElementById('modalPhone');
+    var maskOptions2 = {
+        mask: '+7(000)000-00-00',
+        lazy: false
+    }
+    var mask2 = new IMask(element2, maskOptions2);
+</script>
+<script>
+    function fetchResult(){
+        var keyword = jQuery('.livesearch_input').val();
+        var url = jQuery('#livesearch').data('url');
+        console.log(keyword);
+        if(keyword === "" || keyword.length <= 3){
+            jQuery('#search').html("");
+        } else {
+            jQuery.ajax({
+                url: url,
+                type: 'post',
+                data: {
+                    action: 'send_search',
+                    keyword: keyword
+                },
+                beforeSend: function (){
+                    jQuery('#search').html('Поиск...');
+                },
+                success: function(data) {
+                    jQuery('#search').html( data );
+                    console.log(data);
+                }
+            });
+        }
+    }
 </script>
 </body>
 </html>

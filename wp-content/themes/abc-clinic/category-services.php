@@ -1,4 +1,17 @@
 <?php get_header(); ?>
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+					<?php
+					if ( function_exists('yoast_breadcrumb') ) {
+						yoast_breadcrumb( '<p id="breadcrumbs" class="mb-3">','</p>' );
+					}
+					?>
+                </div>
+            </div>
+        </div>
+    </section>
     <section class="bg_services">
         <div class="container">
             <div class="row">
@@ -16,14 +29,14 @@
         </div>
     </section>
 
-    <section class="mt-5">
+    <section class="mt-5 ">
         <div class="container">
             <div class="row">
                 <div class="col-md-12"><h3 class="slide_h2 fsz_25">Все услуги</h3></div>
 				<?php
 				global $post;
 
-				$myposts = get_posts( 'numberposts=5&category=4' );
+				$myposts = get_posts( 'numberposts=30&category=4' );
 				//$bg_class = '';
 				//$bg_corner_block = '';
 
@@ -84,12 +97,18 @@
                         <div class="form_group"><h3 class="m-0">Записаться на прием</h3>
                             <p>Познакомьтесь с врачом и узнайте
                                 стоимость лечения</p>
-                            <div class="form-group">
+
                                 <form action="" method="post">
-                                    <input type="text" class="input_form" placeholder="Имя">
-                                    <input type="text" class="input_form" placeholder="+7 (999) 99-99-99">
-                            </div>
-                            <button type="submit" class="btn btn-orange d-inline-block pl-5 pr-5 pt-3 pb-3">Записаться
+                                    <input type="hidden" value="services" name="form_position">
+                                    <span style="color: #ef9f72;" class="before_error"></span>
+                                    <input type="text" class="input_form" placeholder="Имя" name="name">
+                                    <span style="color: #ef9f72;" class="before_error"></span>
+                                    <input type="text" class="input_form" placeholder="+7 (999) 99-99-99" id="phone"
+                                           name="phone">
+                                    <input type="hidden" name="post_id" value="<?php echo get_the_ID() ?>">
+
+                            <button type="submit" class="btn btn-orange d-block m-auto pl-5 pr-5 pt-3 pb-3"
+                                    data-url="<?php echo admin_url('admin-ajax.php');?>" data-text_btn="Записаться">Записаться
                             </button>
                             </form>
                             <span class="fsz-10 mt-2">Нажимая на кнопку вы соглашаетесь с Политикой

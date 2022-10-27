@@ -18,24 +18,25 @@ get_header();
 		<?php $slider = get_field( 'home_slider' ); //dump($slider); ?>
         <div class="swiper mySwiper mt-3" style="height: 640px;">
             <div class="swiper-wrapper">
-				<?php foreach ( $slider as $key => $img ) {
-					if ( $img['color_btn'] == '#288791' ) {
-						$img['color_btn'] = 'btn-blue';
-					} else {
-						$img['color_btn'] = 'btn-orange';
-					}
+				<?php //foreach ( $slider as $key => $img ) {
+					//if ( $img['color_btn'] == '#288791' ) {
+						//$img['color_btn'] = 'btn-blue';
+					//} else {
+						//$img['color_btn'] = 'btn-orange';
+					//}
 					?>
-                    <div class="swiper-slide" style="background-image: url('<?php echo $img["img"] ?>')
+                    <div class="swiper-slide" style="background-image: url('<?php echo __PATH_IMG.'/doc2.jpg' ?>')
                             ; background-size: cover;">
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-6 mt-5 pb-md-5">
-                                    <h2 class="slide_h2 mid"><?php echo $img["title"] ?></h2>
-                                    <p class="mb-5"><?php echo $img["drsc"] ?>
+                                    <h2 class="slide_h2 mid"><?php echo $slider[1]["title"] ?></h2>
+                                    <p class="mb-5"><?php echo $slider[1]["drsc"] ?>
                                     </p>
-                                    <a href="<?php echo $img['link'] ?>" class="btn <?php echo $img['color_btn']; ?>
+                                    <a href="<?php echo $slider[1]['link'] ?>" class="btn <?php echo
+                                    $slider[1]['color_btn']; ?>
                                     d-inline-block mt-5 pl-5
-                                     pr-5 pt-3 pb-3 go_more" data-link="<?php echo $img['link'] ?><">Подробнее
+                                     pr-5 pt-3 pb-3 go_more" data-link="<?php echo $slider[1]['link'] ?><">Подробнее
                                     </a>
                                     <div class="number_animate"></div>
                                 </div>
@@ -43,13 +44,13 @@ get_header();
                         </div>
                     </div>
 					<?php
-				} ?>
+				//} ?>
             </div>
-            <div class="block_next">
-                <div class="prev swiper-button-prev"></div>
-                <div class="swiper-pagination"></div>
-                <div class="next swiper-button-next"></div>
-            </div>
+<!--            <div class="block_next">-->
+<!--                <div class="prev swiper-button-prev"></div>-->
+<!--                <div class="swiper-pagination"></div>-->
+<!--                <div class="next swiper-button-next"></div>-->
+<!--            </div>-->
         </div>
         <!-- Slider main container -->
     </section>
@@ -64,8 +65,13 @@ get_header();
                 </div>
 				<?php
 				global $post;
-
-				$myposts = get_posts( 'numberposts=5&category=4' );
+				$args = [
+					'numberposts' => 5,
+					'category'    => 4,
+					'include'     => [72, 435, 454, 74, 70],
+					'order'       => 'ASC',
+				];
+				$myposts = get_posts( $args );
 				//$bg_class = '';
 				//$bg_corner_block = '';
 
@@ -126,12 +132,17 @@ get_header();
                         <div class="form_group"><h3 class="m-0">Записаться на прием</h3>
                             <p>Познакомьтесь с врачом и узнайте
                                 стоимость лечения</p>
-                            <div class="form-group">
+
                                 <form action="" method="post">
-                                    <input type="text" class="input_form" placeholder="Имя">
-                                    <input type="text" class="input_form" placeholder="+7 (999) 99-99-99">
-                            </div>
-                            <button type="submit" class="btn btn-orange d-inline-block pl-5 pr-5 pt-3 pb-3">Записаться
+                                    <input type="hidden" value="front_page" name="form_position">
+                                    <span style="color: #ef9f72;" class="before_error"></span>
+                                    <input type="text" class="input_form" placeholder="Имя" name="name">
+                                    <span style="color: #ef9f72;" class="before_error"></span>
+                                    <input type="text" name="phone" class="input_form" placeholder="+7 (999) 99-99-99"
+                                           id="phone">
+                                    <input type="hidden" name="post_id" value="<?php echo get_the_ID() ?>">
+                            <button type="submit" class="btn btn-orange d-inline-block pl-5 pr-5 pt-3 pb-3"
+                                    data-url="<?php echo admin_url('admin-ajax.php');?>" data-text_btn="Записаться">Записаться
                             </button>
                             </form>
                             <span class="fsz-10 mt-2">Нажимая на кнопку вы соглашаетесь с Политикой
@@ -238,9 +249,7 @@ get_header();
                     <p class="fsz_25 f_weight_600 color_blue lh_31 mb-2 name_doc"><?php echo $doctor->post_title; ?></p>
                     <p class="p_height30"><?php echo the_field('basic_spec', $doctor->ID ); ?></p>
                     <button class="btn btn-orange d-inline-block pl-5 pr-5 pt-3
-                                            pb-3 modal__trigger m-auto">Записаться
-                        <span style="left: 167.5px; top: -0.6875px;"></span><span
-                                style="left: 132.5px; top: 44.3125px;"></span></button>
+                                            pb-3 modal__trigger m-auto">Записаться</button>
                 </div>
     <?php } wp_reset_postdata(); ?>
 

@@ -18,7 +18,7 @@ if ( ! defined( '_S_VERSION' ) ) {
 }
 
 define( 'PREFIX_THEME', 'abc_' );
-define('__PATH_IMG', '/wp-content/themes/abc-clinic/img');
+define( '__PATH_IMG', '/wp-content/themes/abc-clinic/img' );
 /**
  * Sets up theme defaults and registers support for various WordPress features.
  *
@@ -142,14 +142,17 @@ function abc_clinic_scripts() {
 	wp_enqueue_script( 'abc_animate', get_template_directory_uri() . '/js/wow.js', array(
 		'customize-preview'
 	), _S_VERSION, true );
-    if (is_front_page()){
-	    wp_enqueue_script( 'yaMap', 'https://api-maps.yandex.ru/2.1/?lang=ru_RU', array(
-		    'customize-preview'
-	    ), _S_VERSION, true );
-	    wp_enqueue_script( 'map', get_template_directory_uri() . '/js/map.js', array(
-		    'customize-preview'
-	    ), _S_VERSION, true );
-    }
+	wp_enqueue_script( 'abc_imask', get_template_directory_uri() . '/js/imask.js', array(
+		'customize-preview'
+	), _S_VERSION, true );
+	if ( is_front_page() || is_page(13) || is_page(11 )) {
+		wp_enqueue_script( 'yaMap', 'https://api-maps.yandex.ru/2.1/?lang=ru_RU', array(
+			'customize-preview'
+		), _S_VERSION, true );
+		wp_enqueue_script( 'map', get_template_directory_uri() . '/js/map.js', array(
+			'customize-preview'
+		), _S_VERSION, true );
+	}
 
 	if ( in_category( 5 ) ) { // fancybox
 		wp_enqueue_script( 'abc-fancybox', get_template_directory_uri() . '/js/fancybox.min.js', array( 'customize-preview' ), _S_VERSION, true );
@@ -291,19 +294,20 @@ function cutText( $text, $numsymbol ) {
 
 	return $text . "...";
 }
+
 //====================================================================
 // Load more reviews
 add_action( 'wp_ajax_loadmore', 'true_loadmore' );
 add_action( 'wp_ajax_nopriv_loadmore', 'true_loadmore' );
 function true_loadmore() {
-	$paged          = ! empty( $_POST['paged'] ) ? $_POST['paged'] : 1;
-	$last_id        = $_POST['last_id'];
-	$post_id        = $_POST['post_id'];
+	$paged   = ! empty( $_POST['paged'] ) ? $_POST['paged'] : 1;
+	$last_id = $_POST['last_id'];
+	$post_id = $_POST['post_id'];
 
-	$NEXT_ID        = 99999999;
-	if(@$_REQUEST['next_id'] > 0) {
-		$NEXT_ID        = (int)@$_REQUEST['next_id'];
-    }
+	$NEXT_ID = 99999999;
+	if ( @$_REQUEST['next_id'] > 0 ) {
+		$NEXT_ID = (int) @$_REQUEST['next_id'];
+	}
 
 	$paged ++;
 	$num            = 5;
@@ -311,33 +315,32 @@ function true_loadmore() {
 	$args           = [
 		//'status'    => 'approve',
 		//'number'    => $num,
-		'order'     => 'ASC',
-		'number'     => 1,
-        //'offset'    => $paged,
-        //'comment_ID' >$last_id,
-        'post_id'   => $post_id, // Если нужно получить отзывы конкретной записи указать post_id
-        'where' => 'comment_ID > '.$NEXT_ID,
-
+		'order'   => 'ASC',
+		'number'  => 1,
+		//'offset'    => $paged,
+		//'comment_ID' >$last_id,
+		'post_id' => $post_id, // Если нужно получить отзывы конкретной записи указать post_id
+		'where'   => 'comment_ID > ' . $NEXT_ID,
 
 
 	];
 	global $wpdb;
 	//$comments       = $comments_query->query($args); // Основной запрос]=
-	if(isset($post_id)){
-		$comments = $wpdb->get_results( "SELECT * FROM wp_comments WHERE comment_ID < $last_id AND comment_approved = 1 AND comment_post_ID = $post_id ORDER BY comment_ID DESC LIMIT 5");
-	}else{
-		$comments = $wpdb->get_results( "SELECT * FROM wp_comments WHERE comment_ID < $last_id AND comment_approved = 1 ORDER BY comment_ID DESC LIMIT 5");
-    }
+	if ( isset( $post_id ) ) {
+		$comments = $wpdb->get_results( "SELECT * FROM wp_comments WHERE comment_ID < $last_id AND comment_approved = 1 AND comment_post_ID = $post_id ORDER BY comment_ID DESC LIMIT 5" );
+	} else {
+		$comments = $wpdb->get_results( "SELECT * FROM wp_comments WHERE comment_ID < $last_id AND comment_approved = 1 ORDER BY comment_ID DESC LIMIT 5" );
+	}
 
 
-	$NEXT_ID = (int)$comments[sizeof($comments) -1]->comment_ID;
+	$NEXT_ID = (int) $comments[ sizeof( $comments ) - 1 ]->comment_ID;
 
-	$countCo        = $comments_query->query( 'status=approve' ); // Запрос без аргументов (получить общее число
-    // отзывов)
-	$count          = count($countCo); //количество отзывов
+	$countCo = $comments_query->query( 'status=approve' ); // Запрос без аргументов (получить общее число
+	// отзывов)
+	$count = count( $countCo ); //количество отзывов
 
-	$countpages     = ceil($count / $num); //количество страниц отзывов
-    //dump($comments);
+	$countpages = ceil( $count / $num ); //количество страниц отзывов
+	//dump($comments);
 
 	//$count = round( count( $comments ));
 	if ( $comments ) {
@@ -358,24 +361,239 @@ function true_loadmore() {
                 </div>
             </div>
 
-		<?php
+			<?php
 
 
-        }
+		}
 
 
-	}else{
+	} else {
 
-        //echo $num.' last_id: '.$last_id.' post_id: '.$post_id.' '.$countpages.' paged: '.$paged.' NEXT_ID: '.$NEXT_ID;
-$err = [
-	'data' => 0,
-	'load' => 'Отзывов больше нет.'
-];
-        echo  json_encode($err);
+		//echo $num.' last_id: '.$last_id.' post_id: '.$post_id.' '.$countpages.' paged: '.$paged.' NEXT_ID: '.$NEXT_ID;
+		$err = [
+			'data' => 0,
+			'load' => 'Отзывов больше нет.'
+		];
+		echo json_encode( $err );
 
 	}
 	die;
 }
+
+// remove field site comment form
+
+//add_filter('comment_form_default_fields', 'remove_comment_form_fields');
+//function remove_comment_form_fields($fields) {
+//	if(isset($fields['url'])) {
+//	unset($fields['url']);
+//	}
+//	if(isset($fields['email'])) {
+//		unset($fields['email']);
+//	}
+//	if(isset($fields['author'])) {
+//		unset($fields['author']);
+//	}
+//
+//return $fields;
+//}
+function remove_comment_fields( $fields ) {
+	unset( $fields['url'] ); // Удаляем URL
+	unset( $fields['email'] ); // Удаляем E-mail
+
+	return $fields;
+}
+
+add_filter( 'comment_form_default_fields', 'remove_comment_fields' );
+
+// Add phone number field
+//
+//function add_review_phone_field_on_comment_form() {
+//	echo '<p class="comment-form-phone uk-margin-top"><label for="phone">' . __( 'Phone', 'text-domain' ) . '</label><span class="required">*</span><input class="uk-input uk-width-large uk-display-block" type="text" name="phone" id="phone"/></p>';
+//}
+//add_action( 'comment_form_logged_in_after', 'add_review_phone_field_on_comment_form' );
+//add_action( 'comment_form_after_fields', 'add_review_phone_field_on_comment_form' );
+//
+//
+//// Save phone number
+//add_action( 'comment_post', 'save_comment_review_phone_field' );
+//function save_comment_review_phone_field( $comment_id ){
+//	if( isset( $_POST['phone'] ) )
+//		update_comment_meta( $comment_id, 'phone', esc_attr( $_POST['phone'] ) );
+//}
+//
+function print_review_phone( $id ) {
+	$val   = get_comment_meta( $id, "phone", true );
+	$title = $val ? '<strong class="review-phone">' . $val . '</strong>' : '';
+
+	return $title;
+}
+
+//
+add_filter( 'manage_edit-comments_columns', 'my_add_comments_columns' );
+
+function my_add_comments_columns( $my_cols ) {
+
+	$temp_columns = array(
+		'phone' => 'Телефон',
+		'card'  => 'Мед. карта',
+	);
+	$my_cols      = array_slice( $my_cols, 0, 3, true ) + $temp_columns + array_slice( $my_cols, 3, null, true );
+
+	return $my_cols;
+}
+
+//
+add_action( 'manage_comments_custom_column', 'my_add_comment_columns_content', 10, 2 );
+
+function my_add_comment_columns_content( $column, $comment_ID ) {
+	global $comment;
+	switch ( $column ) :
+
+		case 'phone' :
+		{
+
+			echo get_comment_meta( $comment_ID, 'phone', true );
+			break;
+		}
+		case 'card' :
+		{
+			echo get_comment_meta( $comment_ID, 'card', true );
+			break;
+		}
+	endswitch;
+}
+
+// Send form
+add_action( 'wp_ajax_send_form', 'send_form' );
+add_action( 'wp_ajax_nopriv_send_form', 'send_form' );
+function send_form() {
+	$name          = sanitize_text_field( $_POST['name'] );
+	$phone         = sanitize_text_field( $_POST['phone'] );
+	$card          = sanitize_text_field( $_POST['card'] );
+	$comments      = sanitize_text_field( $_POST['comment'] );
+	$post_id       = sanitize_text_field( $_POST['post_id'] );
+	$agent         = $_SERVER['HTTP_USER_AGENT'];
+	$ip            = $_SERVER['REMOTE_ADDR'];
+	$arr           = [];
+	$flag          = 0;
+	$form_position = $_POST['form_position'];
+	$pattern_phone = '/^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/';
+	global $comment;
+
+		if ( empty( $name ) ) {
+			$arr['name'] = 1;
+			$flag        = 1;
+		}
+
+		if ( empty( $phone ) ) {
+			$arr['phone'] = 1;
+
+			$flag = 1;
+		}
+		if ( ! preg_match( $pattern_phone, $phone ) ) {
+			$arr['phone'] = 1;
+			$flag         = 1;
+		}
+		if ( empty($card) && $form_position == 'reviews' ) {
+			$arr['card'] = 1;
+			$flag        = 1;
+		}
+		if (  empty($comments) && $form_position == 'reviews' ) {
+			$arr['comments'] = 1;
+			$flag            = 1;
+		}
+
+		if ( $flag == 0 ) {
+			$arr['success'] = 'Данные успешно отправлены!';
+			$arr['form_position'] = $form_position;
+
+			if ( $form_position == 'reviews' ) {
+			$data           = [
+				'comment_post_ID'      => $post_id,
+				'comment_author'       => $name,
+				'comment_author_email' => '',
+				'comment_author_url'   => '',
+				'comment_content'      => $comments,
+				'comment_type'         => 'comment',
+				'comment_parent'       => 0,
+				'user_id'              => '',
+				'comment_author_IP'    => $ip,
+				'comment_agent'        => $agent,
+				'comment_date'         => null, // получим current_time('mysql')
+				'comment_approved'     => 0,
+			];
+
+
+			wp_insert_comment( wp_slash( $data ) );
+
+			global $wpdb;
+			$args        = array(
+				'post_id' => $post_id,
+				'orderby' => array( 'comment_date' ),
+				'order'   => 'DESC',
+				'number'  => 1
+			);
+			$id_comments = get_comments( $args );
+
+
+// cOMMENT_META
+
+			$wpdb->insert( $wpdb->prefix . 'commentmeta', // Добавляем телефон
+				[
+					'comment_id' => $id_comments[0]->comment_ID,
+					'meta_key'   => 'phone',
+					'meta_value' => $phone
+				] );
+			$wpdb->insert( $wpdb->prefix . 'commentmeta', // добавляем номер мед. карты
+				[
+					'comment_id' => $id_comments[0]->comment_ID,
+					'meta_key'   => 'card',
+					'meta_value' => $card
+				] );
+
+		}else{
+				$arr['form_'] = $form_position;
+            }
+
+
+
+
+	}
+//    if ($form_position == 'front_page'){
+//        $arr['success'] = 'Топ';
+//    }
+	echo json_encode( $arr );
+	file_put_contents(__DIR__ . '/array.txt', $text);
+	die;
+}
+
+//-----------------
+    function linkTxt($link, $text, $boo = null, $class = null){
+    if ($boo == true){
+        $boo = 'target="_blank"';
+    }
+    return '<a href="'.$link.'" '.$boo.' class="'.$class.'">'.$text.'</a>';
+    }
+
+// Ajax search
+add_action('wp_ajax_send_search' , 'data_search');
+add_action('wp_ajax_nopriv_send_search','data_search');
+function data_search(){
+$query = new WP_Query( array( 'posts_per_page' => 10, 's' => esc_attr( $_POST['keyword'] ), 'post_type' => 'any'
+) );
+if( $query->have_posts() ) :
+
+while( $query->have_posts() ): $query->the_post(); ?>
+<a href="<?php echo the_permalink(); ?>" class="fsz_25 color_cyan2 text_decoration_none
+f_weight_600"><?php the_title();?> <span>→</span></a>
+<?php endwhile;
+wp_reset_postdata();
+else:
+echo 'По данному запрому ничего не найдено!';
+endif;
+wp_die();
+}
+
 
 
 

@@ -18,6 +18,8 @@
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
+<div class="block_success_form animated wow"><span>	&#10006;</span>Данные успешно
+    отправлены!</div>
 <div class="preloader"></div>
 <div class="overlays"></div>
 <?php wp_body_open(); ?>
